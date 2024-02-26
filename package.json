@@ -16,12 +16,13 @@
   "module": "dist/index.module.js",
   "private": true,
   "scripts": {
-    "build": "microbundle --define process.env.NODE_ENV=production --css inline",
+    "build": "node ./generate-widget-html-string && microbundle --define process.env.NODE_ENV=production --css inline",
     "dev": "microbundle watch --define process.env.NODE_ENV=production --css inline"
   },
   "devDependencies": {
     "@floating-ui/dom": "^1.6.3",
     "focus-trap": "^7.5.4",
+    "html-minifier": "^4.0.0",
     "microbundle": "^0.15.1"
   }
 }
