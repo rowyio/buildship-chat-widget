@@ -3,11 +3,14 @@
 A chat widget built to work in tandem with your own custom [BuildShip](https://buildship.com/) workflow that you can plug in anywhere on your website. Built by the [Rowy](https://www.rowy.io/) team.
 
 ## Getting started
+
 1. Load the widget on your page:
-```html
-<script src="https://unpkg.com/@buildshipapp/chat-widget@^1" defer></script>
-```
-2. Load the widget on your page and configure it.
+
+   ```html
+   <script src="https://unpkg.com/@buildshipapp/chat-widget@^1" defer></script>
+   ```
+
+2. Configure the widget:
 
    ```html
    <script>
