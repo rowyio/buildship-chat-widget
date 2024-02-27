@@ -1,0 +1,34 @@
+{
+  "name": "buildship-chat-widget",
+  "version": "1.0.0",
+  "description": "A chat widget that can be paired with BuildShip workflows built using the OpenAI Assistant.",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/rowyio/buildship-chat-widget.git"
+  },
+  "license": "MIT",
+  "type": "module",
+  "main": "dist/index.cjs",
+  "source": "src/index.ts",
+  "types": "dist/src/index.d.ts",
+  "exports": {
+    "require": "./dist/index.cjs",
+    "default": "./dist/index.modern.js"
+  },
+  "unpkg": "dist/index.umd.js",
+  "files": [
+    "dist/**/*"
+  ],
+  "module": "dist/index.module.js",
+  "scripts": {
+    "build": "node ./generate-widget-html-string && microbundle --define process.env.NODE_ENV=production --css inline",
+    "dev": "microbundle watch --define process.env.NODE_ENV=production --css inline"
+  },
+  "devDependencies": {
+    "@floating-ui/dom": "^1.6.3",
+    "focus-trap": "^7.5.4",
+    "html-minifier": "^4.0.0",
+    "marked": "^12.0.0",
+    "microbundle": "^0.15.1"
+  }
+}

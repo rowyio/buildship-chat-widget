@@ -1,0 +1,268 @@
+:root {
+  --buildship-chat-widget-bg-color: #fff;
+  --buildship-chat-widget-border-color: #e2e2e2;
+  --buildship-chat-widget-shadow: rgba(7, 0, 20, 0.06) 0px 0px 0px 1px,
+    rgba(7, 0, 20, 0.1) 0px 10px 15px -3px, rgba(7, 0, 20, 0.05) 0px 4px 6px,
+    rgba(7, 0, 20, 0.05) 0px 30px 40px;
+
+  --buildship-chat-widget-primary-color-text: #000;
+  --buildship-chat-widget-secondary-color-text: #979797;
+
+  --buildship-chat-widget-user-message-text-color: #fff;
+  --buildship-chat-widget-user-message-bg-color: #2c91ed;
+  --buildship-chat-widget-system-message-text-color: #000;
+  --buildship-chat-widget-system-message-bg-color: #e4e4e4;
+
+  --buildship-chat-widget-primary-color: #2c91ed;
+  --buildship-chat-widget-header-height: 4rem;
+
+  --buildship-chat-widget-button-transition: background-color 0.2s ease-in-out,
+    opacity 0.2s ease-in-out, transform 0.2s ease-in-out;
+  --buildship-chat-widget-title-weight: 600;
+  --buildship-chat-widget-button-weight: 500;
+  --buildship-chat-widget-border-radius: 1rem;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --buildship-chat-widget-bg-color: #2d2d30;
+    --buildship-chat-widget-border-color: #424244;
+    --buildship-chat-widget-shadow: rgba(0, 0, 5, 0.24) 0px 0px 0px 1px,
+      rgba(0, 0, 5, 0.4) 0px 10px 15px -3px, rgba(0, 0, 5, 0.2) 0px 4px 6px,
+      rgba(0, 0, 5, 0.2) 0px 30px 40px;
+
+    --buildship-chat-widget-primary-color-text: #fff;
+    --buildship-chat-widget-secondary-color-text: #818183;
+
+    --buildship-chat-widget-user-message-text-color: #fff;
+    --buildship-chat-widget-user-message-bg-color: #2c91ed;
+    --buildship-chat-widget-system-message-text-color: #fff;
+    --buildship-chat-widget-system-message-bg-color: #424244;
+  }
+}
+
+[data-theme="light"] {
+  --buildship-chat-widget-bg-color: #fff;
+  --buildship-chat-widget-border-color: #e2e2e2;
+  --buildship-chat-widget-shadow: rgba(7, 0, 20, 0.06) 0px 0px 0px 1px,
+    rgba(7, 0, 20, 0.1) 0px 10px 15px -3px, rgba(7, 0, 20, 0.05) 0px 4px 6px,
+    rgba(7, 0, 20, 0.05) 0px 30px 40px;
+
+  --buildship-chat-widget-primary-color-text: #000;
+  --buildship-chat-widget-secondary-color-text: #979797;
+
+  --buildship-chat-widget-user-message-text-color: #fff;
+  --buildship-chat-widget-user-message-bg-color: #2c91ed;
+  --buildship-chat-widget-system-message-text-color: #000;
+  --buildship-chat-widget-system-message-bg-color: #e4e4e4;
+}
+
+[data-theme="dark"] {
+  --buildship-chat-widget-bg-color: #2d2d30;
+  --buildship-chat-widget-border-color: #424244;
+  --buildship-chat-widget-shadow: rgba(0, 0, 5, 0.24) 0px 0px 0px 1px,
+    rgba(0, 0, 5, 0.4) 0px 10px 15px -3px, rgba(0, 0, 5, 0.2) 0px 4px 6px,
+    rgba(0, 0, 5, 0.2) 0px 30px 40px;
+
+  --buildship-chat-widget-primary-color-text: #fff;
+  --buildship-chat-widget-secondary-color-text: #818183;
+
+  --buildship-chat-widget-user-message-text-color: #fff;
+  --buildship-chat-widget-user-message-bg-color: #2c91ed;
+  --buildship-chat-widget-system-message-text-color: #fff;
+  --buildship-chat-widget-system-message-bg-color: #424244;
+}
+
+#buildship-chat-widget__container {
+  position: fixed;
+  z-index: 9999;
+  width: 25rem;
+  height: 40rem;
+  box-sizing: border-box;
+  background-color: var(--buildship-chat-widget-bg-color);
+  box-shadow: var(--buildship-chat-widget-shadow);
+  border-radius: var(--buildship-chat-widget-border-radius);
+  font-family: inherit;
+  font-size: 1rem;
+  color: var(--buildship-chat-widget-primary-color-text);
+}
+#buildship-chat-widget__container * {
+  box-sizing: border-box;
+}
+#buildship-chat-widget__container *:focus {
+  outline: none;
+}
+
+#buildship-chat-widget__backdrop {
+  position: fixed;
+  z-index: 9998;
+  width: 100vw;
+  height: 100vh;
+  top: 0;
+  left: 0;
+  box-sizing: border-box;
+  background-color: transparent;
+}
+
+/* Widget Header styles */
+#buildship-chat-widget__header {
+  display: flex;
+  height: var(--buildship-chat-widget-header-height);
+  padding: 1rem;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 2px solid var(--buildship-chat-widget-border-color);
+}
+#buildship-chat-widget__title {
+  display: flex;
+  align-items: center;
+  font-weight: var(--buildship-chat-widget-title-weight);
+  width: 60%;
+}
+#buildship-chat-widget__title_icon {
+  margin-right: 0.5rem;
+}
+#buildship-chat-widget__title_icon path {
+  fill: var(--buildship-chat-widget-primary-color-text);
+}
+#buildship-chat-widget__title_text {
+  width: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+#buildship-chat-widget__branding {
+  text-decoration: none;
+  font-size: 0.75rem;
+  color: var(--buildship-chat-widget-secondary-color-text);
+}
+#buildship-chat-widget__branding > span {
+  color: var(--buildship-chat-widget-primary-color-text);
+}
+#buildship-chat-widget__body {
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  width: 100%;
+  height: calc(100% - var(--buildship-chat-widget-header-height));
+}
+
+/* Messages history container styles */
+#buildship-chat-widget__messages_history {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column-reverse;
+  overflow-y: auto;
+  /* Hide scrollbar for... */
+  -ms-overflow-style: none; /* ... IE, Edge... */
+  scrollbar-width: none; /* ... and Firefox */
+}
+/* Hide scrollbar for Chrome, Safari and Opera */
+#buildship-chat-widget__messages_history::-webkit-scrollbar {
+  display: none;
+}
+#buildship-chat-widget__messages_history .buildship-chat-widget__message {
+  border-radius: 1rem;
+  max-width: 85%;
+  margin-bottom: 0.5rem;
+  padding: 1rem;
+}
+#buildship-chat-widget__messages_history p {
+  margin: 0;
+  white-space: pre-line;
+  word-wrap: break-word;
+}
+#buildship-chat-widget__messages_history img {
+  max-width: 100%;
+  object-fit: cover;
+}
+#buildship-chat-widget__messages_history
+  .buildship-chat-widget__message
+  .buildship-chat-widget__message-timestamp {
+  font-size: 0.8rem;
+  opacity: 0.5;
+  margin-top: 0.5rem;
+}
+#buildship-chat-widget__messages_history
+  .buildship-chat-widget__message.buildship-chat-widget__message--system {
+  background-color: var(--buildship-chat-widget-system-message-bg-color);
+  align-self: flex-start;
+}
+#buildship-chat-widget__messages_history
+  .buildship-chat-widget__message.buildship-chat-widget__message--system
+  p {
+  color: var(--buildship-chat-widget-system-message-text-color);
+}
+#buildship-chat-widget__messages_history
+  .buildship-chat-widget__message.buildship-chat-widget__message--user {
+  background-color: var(--buildship-chat-widget-user-message-bg-color);
+  align-self: flex-end;
+}
+#buildship-chat-widget__messages_history
+  .buildship-chat-widget__message.buildship-chat-widget__message--user
+  p {
+  color: var(--buildship-chat-widget-user-message-text-color);
+}
+#buildship-chat-widget__messages_history
+  .buildship-chat-widget__message.buildship-chat-widget__message--user
+  .buildship-chat-widget__message-timestamp {
+  text-align: right;
+}
+
+/* Input form styles */
+#buildship-chat-widget__form {
+  display: flex;
+  position: relative;
+  margin-top: 1rem;
+  margin-bottom: 0rem;
+  width: 100%;
+  gap: 0.5rem;
+}
+#buildship-chat-widget__input {
+  flex-grow: 1;
+  resize: none;
+  border-radius: 23px; /* Half of the height, to make it pill-shaped */
+  border: 2px solid var(--buildship-chat-widget-border-color);
+  background: none;
+  font: inherit;
+  color: inherit;
+  padding: 0.5rem 1rem;
+}
+#buildship-chat-widget__input:focus {
+  border-color: var(--buildship-chat-widget-primary-color);
+  box-shadow: none;
+}
+
+/* Submit button styles */
+#buildship-chat-widget__submit {
+  border: none;
+  border-radius: 50%;
+  padding: 1rem;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: inherit;
+  min-height: 2rem;
+  line-height: 2rem;
+  transition: var(--buildship-chat-widget-button-transition);
+}
+#buildship-chat-widget__submit {
+  position: relative;
+  background-color: var(--buildship-chat-widget-primary-color);
+  color: var(--buildship-chat-widget-primary-color-text);
+}
+#buildship-chat-widget__submit:hover {
+  transform: scale(1.05);
+  transition-duration: 0s;
+}
+#buildship-chat-widget__submit:active {
+  transform: scale(0.95);
+  transition-duration: 0s;
+}
+#buildship-chat-widget__submit[disabled] {
+  background-color: var(--buildship-chat-widget-border-color);
+  opacity: 0.5;
+  cursor: default;
+}
