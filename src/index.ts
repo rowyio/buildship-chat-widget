@@ -11,6 +11,7 @@ const WIDGET_MESSAGES_HISTORY_CONTAINER_ID =
 
 export type WidgetConfig = {
   url: string;
+  threadId: string | undefined;
   user: Record<any, any>;
   widgetTitle: string;
   greetingMessage: string | null;
@@ -19,6 +20,7 @@ export type WidgetConfig = {
 };
 const config: WidgetConfig = {
   url: "",
+  threadId: undefined,
   user: {},
   widgetTitle: "Chatbot",
   greetingMessage: null,
@@ -154,6 +156,7 @@ function submit(e: Event) {
   const data = {
     ...config.user,
     message: (target.elements as any).message.value,
+    threadId: config.threadId,
     timestamp: Date.now(),
   };
 
@@ -166,7 +169,10 @@ function submit(e: Event) {
   })
     .then(async (res) => {
       if (res.ok) {
-        createNewMessageEntry(await res.text(), Date.now(), "system");
+        const { message: responseMessage, threadId: responseThreadId } =
+          await res.json();
+        createNewMessageEntry(responseMessage, Date.now(), "system");
+        config.threadId = config.threadId ?? responseThreadId;
       } else {
         console.error("BuildShip Chat Widget: Server error", res);
         if (!config.disableErrorAlert)
