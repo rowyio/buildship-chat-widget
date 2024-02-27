@@ -26,7 +26,7 @@ const config: WidgetConfig = {
   widgetTitle: "Chatbot",
   greetingMessage: null,
   disableErrorAlert: false,
-  closeOnOutsideClick: false,
+  closeOnOutsideClick: true,
   ...(window as any).buildShipChatWidget?.config,
 };
 
