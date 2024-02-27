@@ -1,5 +1,6 @@
 import { computePosition, flip, shift } from "@floating-ui/dom";
 import { createFocusTrap } from "focus-trap";
+import { marked } from "marked";
 
 import { widgetHTML } from "./widgetHtmlString";
 import css from "./widget.css";
@@ -111,7 +112,7 @@ function close() {
   optionalBackdrop.remove();
 }
 
-function createNewMessageEntry(
+async function createNewMessageEntry(
   message: string,
   timestamp: number,
   from: "system" | "user"
@@ -121,10 +122,11 @@ function createNewMessageEntry(
   messageElement.classList.add(`buildship-chat-widget__message--${from}`);
 
   const messageText = document.createElement("p");
-  messageText.textContent = message;
+  messageText.innerHTML = await marked(message);
   messageElement.appendChild(messageText);
 
   const messageTimestamp = document.createElement("p");
+  messageTimestamp.classList.add("buildship-chat-widget__message-timestamp");
   messageTimestamp.textContent =
     ("0" + new Date(timestamp).getHours()).slice(-2) + // Hours (padded with 0 if needed)
     ":" +
@@ -171,7 +173,7 @@ function submit(e: Event) {
       if (res.ok) {
         const { message: responseMessage, threadId: responseThreadId } =
           await res.json();
-        createNewMessageEntry(responseMessage, Date.now(), "system");
+        await createNewMessageEntry(responseMessage, Date.now(), "system");
         config.threadId = config.threadId ?? responseThreadId;
       } else {
         console.error("BuildShip Chat Widget: Server error", res);

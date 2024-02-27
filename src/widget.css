@@ -173,9 +173,13 @@
   white-space: pre-line;
   word-wrap: break-word;
 }
+#buildship-chat-widget__messages_history img {
+  max-width: 100%;
+  object-fit: cover;
+}
 #buildship-chat-widget__messages_history
   .buildship-chat-widget__message
-  p:nth-child(2) {
+  .buildship-chat-widget__message-timestamp {
   font-size: 0.8rem;
   opacity: 0.5;
   margin-top: 0.5rem;
@@ -202,7 +206,7 @@
 }
 #buildship-chat-widget__messages_history
   .buildship-chat-widget__message.buildship-chat-widget__message--user
-  p:nth-child(2) {
+  .buildship-chat-widget__message-timestamp {
   text-align: right;
 }
 
