@@ -1,12 +1,12 @@
 # BuildShip Chat Widget
 
-An open-source AI chat widget that can be easily embedded on your website or app. This plug-and-play widget is designed to work seamlessly with your custom [BuildShip](https://buildship.com/) workflow, allowing it to connect with your database, knowledge repository, and any other tools that you use. 
+An open-source AI chat widget that can be easily embedded on your website or app. This plug-and-play widget is designed to work seamlessly with your custom [BuildShip](https://buildship.com/) workflow, allowing it to connect with your database, knowledge repository, and any other tools that you use.
 
 With this powerful AI chat assistant, you can enhance the user experience of your website or app significantly.
 
 ## Getting started - in just two steps
 
-1. Load the widget on your page by adding this code snippet and connect the widget to your BuildShip workflow by adding the API URL as per the instructions [here](https://github.com/rowyio/buildship-chat-widget/edit/main/README.md#connecting-the-widget-to-your-buildship-workflow). Add any [customization](https://github.com/rowyio/buildship-chat-widget/edit/main/README.md#config-properties) options as needed.
+1. Load the widget on your page by adding this code snippet and connect the widget to your BuildShip workflow by adding the API URL as per the instructions [here](#connecting-the-widget-to-your-buildship-workflow). Add any [customization](#config-properties) options as needed.
 
    ```html
    <script src="https://unpkg.com/@buildshipapp/chat-widget@^1" defer></script>
@@ -14,13 +14,24 @@ With this powerful AI chat assistant, you can enhance the user experience of you
      window.addEventListener("load", () => {
        window.buildShipChatWidget.config.widgetTitle = "Chatbot";
        window.buildShipChatWidget.config.greetingMessage = "Hello! How may I help you today?";
-       window.buildShipChatWidget.config.url = "https://projectid.buildship.run/chat/...."
+       window.buildShipChatWidget.config.url = "https://<project_id>.buildship.run/chat/....";
        <!-- Other optional properties, learn more in the `Config Properties` section below -->
      });
    </script>
    ```
 
-2. Add the button to open the chat widget anywhere on your website
+   You may also import it as a module if you're working with TypeScript or ES6 (type declarations are included):
+
+   ```typescript
+   import "@buildshipapp/chat-widget";
+
+   window.buildShipChatWidget.config.widgetTitle = "Chatbot";
+   window.buildShipChatWidget.config.greetingMessage = "Hello! How may I help you today?";
+   window.buildShipChatWidget.config.url = "https://<project_id>.buildship.run/chat/....";
+   // ...
+   ```
+
+2. Add the button to open the chat widget anywhere on your website:
 
    ```html
    <button data-buildship-chat-widget-button>Beep Boop</button>
@@ -61,13 +72,15 @@ The widget can be customized by editing the properties present in the `window.bu
 
 ### `window.buildShipChatWidget.config.url` (required)
 
-The URL of the endpoint to which the widget will make a POST request when the user sends a message. The endpoint should expect a JSON object in the request body and should respond with a JSON object containing the bot's response and the thread ID (as described [above](#request-and-response)).
+The URL of the endpoint to which the widget will make a POST request when the user sends a message. The endpoint should expect a JSON object in the request body and should respond with a JSON object containing the bot's response and the thread ID.
 
 ### `window.buildShipChatWidget.config.threadId` (optional)
 
 A unique identifier for the conversation. This can be used to maintain the context of the conversation across multiple messages/sessions.
 
-If not set, the widget will generate a random thread ID for the first user message and use that for the rest of the conversation until the script remains loaded -- for example, the thread ID will be discarded if the page is refreshed.
+If not set, the widget will send the first user message without a thread ID. If you then design your workflow to have it return a thread ID as part of its response (as described in [Request and Response](#request-and-response)), the widget will automatically use that for the rest of the conversation until the script remains loaded -- for example, the thread ID will be discarded if the page is refreshed.
+
+Note: The thread ID returned in the response will not be used if the `threadId` property is already set.
 
 ### `window.buildShipChatWidget.config.user` (optional)
 
@@ -101,7 +114,7 @@ Defaults to `false`.
 
 ### `window.buildShipChatWidget.config.closeOnOutsideClick` (optional)
 
-Closes the widget when the user clicks outside of the widget body. If not set to `false`, you will need to use the `close()` method (provided in the `window.buildShipChatWidget` object) to be able to close the widget programmatically (for example, by attaching it to a button).
+Closes the widget when the user clicks outside of the widget body. If set to `false`, you will need to use the `close()` method (provided in the `window.buildShipChatWidget` object) to be able to close the widget programmatically (for example, by attaching it to a button).
 
 Defaults to `true`.
 
