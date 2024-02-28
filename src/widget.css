@@ -170,7 +170,6 @@
 }
 #buildship-chat-widget__messages_history p {
   margin: 0;
-  white-space: pre-line;
   word-wrap: break-word;
 }
 #buildship-chat-widget__messages_history img {
