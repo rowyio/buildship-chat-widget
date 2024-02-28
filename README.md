@@ -125,3 +125,46 @@ When the script is loaded, it looks for any elements with the `data-buildship-ch
 In addition to the `config` object, the `window.buildShipChatWidget` object also exposes the `open()` & `close()` methods, which can be called directly.
 
 The `open()` method accepts the click `event`, and uses `event.target` to compute the widget's position using [Floating UI](https://floating-ui.com/).
+
+## Customizing the widget's appearance
+
+The widget’s styling can be customized by overriding the CSS variables and/or the rules. (See [here](https://github.com/rowyio/buildship-chat-widget/blob/main/src/widget.css) for a list of variables and selectors).
+
+For example, the variables can be overridden like so:
+
+```css
+:root {
+  --buildship-chat-widget-primary-color: #0000ff;
+}
+
+/* Explicitly targeting the light theme is necessary in case the user's system theme is set to 'dark', but the body's `data-theme` attribute is set to `light` (perhaps via a theme toggle on the page). */
+[data-theme*="light"] {
+  ...;
+}
+```
+
+Dark mode is activated when either:
+
+- the user's system theme is set to `dark` (i.e. `@media (prefers-color-scheme: dark)` is true) and that's what the page uses, or
+
+- the body has a `data-theme` attribute set to `dark`, like so:
+
+  ```html
+  <body data-theme="dark"></body>
+  ```
+
+Dark mode styles can be overridden as well:
+
+```css
+@media (prefers-color-scheme: dark) {
+  :root {
+    ...;
+  }
+}
+
+[data-theme*="dark"] {
+  ...;
+}
+```
+
+The font is inherited from the body.
