@@ -1,6 +1,8 @@
 # BuildShip Chat Widget
 
-An open-source AI chat widget that can be easily embedded on your website or app. This plug-and-play widget is designed to work seamlessly with your custom [BuildShip](https://buildship.com/) workflow, allowing it to connect with your database, knowledge repository, and any other tools that your use. With this powerful AI chat assistant, you can enhance the user experience of your website or app significantly.
+An open-source AI chat widget that can be easily embedded on your website or app. This plug-and-play widget is designed to work seamlessly with your custom [BuildShip](https://buildship.com/) workflow, allowing it to connect with your database, knowledge repository, and any other tools that you use. 
+
+With this powerful AI chat assistant, you can enhance the user experience of your website or app significantly.
 
 ## Getting started - in just two steps
 
