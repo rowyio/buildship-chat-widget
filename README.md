@@ -16,9 +16,9 @@ A chat widget built to work in tandem with your own custom [BuildShip](https://b
    <script>
      window.addEventListener("load", () => {
        window.buildShipChatWidget.config.widgetTitle = "Chatbot";
-       window.buildShipChatWidget.config.greetingMessage =
-         "Hello! How may I help you today?";
-       <!-- ...other properties, learn more in the 'Config Properties' section below -->
+       window.buildShipChatWidget.config.greetingMessage = "Hello! How may I help you today?";
+       window.buildShipChatWidget.config.url = "https://projectid.buildship.run/chat/...."
+       <!-- ...other optional properties, learn more in the 'Config Properties' section below -->
      });
    </script>
    ```
