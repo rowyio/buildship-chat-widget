@@ -1,29 +1,24 @@
 # BuildShip Chat Widget
 
-A chat widget built to work in tandem with your own custom [BuildShip](https://buildship.com/) workflow that you can plug in anywhere on your website. Built by the [Rowy](https://www.rowy.io/) team.
+An open-source AI chat widget that can be easily embedded on your website or app. This plug-and-play widget is designed to work seamlessly with your custom [BuildShip](https://buildship.com/) workflow, allowing it to connect with your database, knowledge repository, and any other tools that your use. With this powerful AI chat assistant, you can enhance the user experience of your website or app significantly.
 
-## Getting started
+## Getting started - in just two steps
 
-1. Load the widget on your page:
+1. Load the widget on your page by adding this code snippet and connect the widget to your BuildShip workflow by adding the API URL as per the instructions [here](https://github.com/rowyio/buildship-chat-widget/edit/main/README.md#connecting-the-widget-to-your-buildship-workflow). Add any [customization](https://github.com/rowyio/buildship-chat-widget/edit/main/README.md#config-properties) options as needed.
 
    ```html
    <script src="https://unpkg.com/@buildshipapp/chat-widget@^1" defer></script>
-   ```
-
-2. Configure the widget:
-
-   ```html
    <script>
      window.addEventListener("load", () => {
        window.buildShipChatWidget.config.widgetTitle = "Chatbot";
        window.buildShipChatWidget.config.greetingMessage = "Hello! How may I help you today?";
        window.buildShipChatWidget.config.url = "https://projectid.buildship.run/chat/...."
-       <!-- ...other optional properties, learn more in the 'Config Properties' section below -->
+       <!-- Other optional properties, learn more in the `Config Properties` section below -->
      });
    </script>
    ```
 
-3. Set a button to open the widget:
+2. Add the button to open the chat widget anywhere on your website
 
    ```html
    <button data-buildship-chat-widget-button>Beep Boop</button>
