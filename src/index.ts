@@ -9,6 +9,7 @@ const WIDGET_BACKDROP_ID = "buildship-chat-widget__backdrop";
 const WIDGET_CONTAINER_ID = "buildship-chat-widget__container";
 const WIDGET_MESSAGES_HISTORY_CONTAINER_ID =
   "buildship-chat-widget__messages_history";
+const WIDGET_THINKING_BUBBLE_ID = "buildship-chat-widget__thinking_bubble";
 
 export type WidgetConfig = {
   url: string;
@@ -50,6 +51,14 @@ messagesHistory.id = WIDGET_MESSAGES_HISTORY_CONTAINER_ID;
 
 const optionalBackdrop = document.createElement("div");
 optionalBackdrop.id = WIDGET_BACKDROP_ID;
+
+const thinkingBubble = document.createElement("div");
+thinkingBubble.id = WIDGET_THINKING_BUBBLE_ID;
+thinkingBubble.innerHTML = `
+    <span class="circle"></span>
+    <span class="circle"></span>
+    <span class="circle"></span>
+  `;
 
 const trap = createFocusTrap(containerElement, {
   initialFocus: "#buildship-chat-widget__input",
@@ -136,7 +145,7 @@ async function createNewMessageEntry(
   messagesHistory.prepend(messageElement);
 }
 
-function submit(e: Event) {
+async function submit(e: Event) {
   e.preventDefault();
   const target = e.target as HTMLFormElement;
 
@@ -162,7 +171,8 @@ function submit(e: Event) {
     timestamp: Date.now(),
   };
 
-  createNewMessageEntry(data.message, data.timestamp, "user");
+  await createNewMessageEntry(data.message, data.timestamp, "user");
+  messagesHistory.prepend(thinkingBubble);
 
   fetch(config.url, {
     method: "POST",
@@ -203,6 +213,7 @@ function submit(e: Event) {
     })
     .finally(() => {
       submitElement.removeAttribute("disabled");
+      thinkingBubble.remove();
     });
 
   target.reset();
