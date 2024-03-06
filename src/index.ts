@@ -171,8 +171,23 @@ function submit(e: Event) {
   })
     .then(async (res) => {
       if (res.ok) {
-        const { message: responseMessage, threadId: responseThreadId } =
-          await res.json();
+        const {
+          message: responseMessage,
+          threadId: responseThreadId,
+        }: {
+          message: string | undefined;
+          threadId: string | undefined;
+        } = await res.json();
+
+        if (!responseMessage && responseMessage !== "") {
+          console.error("BuildShip Chat Widget: Server error", res);
+          if (!config.disableErrorAlert)
+            alert(
+              `Received an OK response but no message was found. Please make sure the API response is configured correctly. You can learn more here:\n\nhttps://github.com/rowyio/buildship-chat-widget?tab=readme-ov-file#connecting-the-widget-to-your-buildship-workflow`
+            );
+          return;
+        }
+
         await createNewMessageEntry(responseMessage, Date.now(), "system");
         config.threadId = config.threadId ?? responseThreadId;
       } else {
