@@ -9,6 +9,7 @@ const WIDGET_BACKDROP_ID = "buildship-chat-widget__backdrop";
 const WIDGET_CONTAINER_ID = "buildship-chat-widget__container";
 const WIDGET_MESSAGES_HISTORY_CONTAINER_ID =
   "buildship-chat-widget__messages_history";
+const WIDGET_THINKING_BUBBLE_ID = "buildship-chat-widget__thinking_bubble";
 
 export type WidgetConfig = {
   url: string;
@@ -50,6 +51,14 @@ messagesHistory.id = WIDGET_MESSAGES_HISTORY_CONTAINER_ID;
 
 const optionalBackdrop = document.createElement("div");
 optionalBackdrop.id = WIDGET_BACKDROP_ID;
+
+const thinkingBubble = document.createElement("div");
+thinkingBubble.id = WIDGET_THINKING_BUBBLE_ID;
+thinkingBubble.innerHTML = `
+    <span class="circle"></span>
+    <span class="circle"></span>
+    <span class="circle"></span>
+  `;
 
 const trap = createFocusTrap(containerElement, {
   initialFocus: "#buildship-chat-widget__input",
@@ -136,7 +145,7 @@ async function createNewMessageEntry(
   messagesHistory.prepend(messageElement);
 }
 
-function submit(e: Event) {
+async function submit(e: Event) {
   e.preventDefault();
   const target = e.target as HTMLFormElement;
 
@@ -162,7 +171,8 @@ function submit(e: Event) {
     timestamp: Date.now(),
   };
 
-  createNewMessageEntry(data.message, data.timestamp, "user");
+  await createNewMessageEntry(data.message, data.timestamp, "user");
+  messagesHistory.prepend(thinkingBubble);
 
   fetch(config.url, {
     method: "POST",
@@ -171,8 +181,23 @@ function submit(e: Event) {
   })
     .then(async (res) => {
       if (res.ok) {
-        const { message: responseMessage, threadId: responseThreadId } =
-          await res.json();
+        const {
+          message: responseMessage,
+          threadId: responseThreadId,
+        }: {
+          message: string | undefined;
+          threadId: string | undefined;
+        } = await res.json();
+
+        if (!responseMessage && responseMessage !== "") {
+          console.error("BuildShip Chat Widget: Server error", res);
+          if (!config.disableErrorAlert)
+            alert(
+              `Received an OK response but no message was found. Please make sure the API response is configured correctly. You can learn more here:\n\nhttps://github.com/rowyio/buildship-chat-widget?tab=readme-ov-file#connecting-the-widget-to-your-buildship-workflow`
+            );
+          return;
+        }
+
         await createNewMessageEntry(responseMessage, Date.now(), "system");
         config.threadId = config.threadId ?? responseThreadId;
       } else {
@@ -188,6 +213,7 @@ function submit(e: Event) {
     })
     .finally(() => {
       submitElement.removeAttribute("disabled");
+      thinkingBubble.remove();
     });
 
   target.reset();

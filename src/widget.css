@@ -163,10 +163,11 @@
   display: none;
 }
 #buildship-chat-widget__messages_history .buildship-chat-widget__message {
-  border-radius: 1rem;
+  border-radius: var(--buildship-chat-widget-border-radius);
   max-width: 85%;
   margin-bottom: 0.5rem;
   padding: 1rem;
+  animation: fade-in 0.75s;
 }
 #buildship-chat-widget__messages_history p {
   margin: 0;
@@ -207,6 +208,58 @@
   .buildship-chat-widget__message.buildship-chat-widget__message--user
   .buildship-chat-widget__message-timestamp {
   text-align: right;
+}
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Thinking Chat Bubble styles */
+#buildship-chat-widget__thinking_bubble {
+  background-color: var(--buildship-chat-widget-system-message-bg-color);
+  border-radius: var(--buildship-chat-widget-border-radius);
+  width: 80px;
+  margin-bottom: 0.5rem;
+  padding: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  animation: fade-in 0.75s;
+}
+#buildship-chat-widget__thinking_bubble .circle {
+  background-color: var(--buildship-chat-widget-system-message-text-color);
+  opacity: 0.5;
+  height: 12px;
+  width: 12px;
+  border-radius: 50%;
+  animation: bounce 1500ms infinite;
+}
+#buildship-chat-widget__thinking_bubble .circle:nth-child(1) {
+  animation-delay: 0ms;
+}
+#buildship-chat-widget__thinking_bubble .circle:nth-child(2) {
+  animation-delay: 100ms;
+}
+#buildship-chat-widget__thinking_bubble .circle:nth-child(3) {
+  animation-delay: 200ms;
+}
+@keyframes bounce {
+  0% {
+    transform: translateY(0);
+  }
+  20% {
+    transform: translateY(-0.5rem);
+  }
+  40% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(0);
+  }
 }
 
 /* Input form styles */
