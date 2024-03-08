@@ -19,6 +19,7 @@ export type WidgetConfig = {
   greetingMessage: string | null;
   disableErrorAlert: boolean;
   closeOnOutsideClick: boolean;
+  openOnLoad: boolean;
 };
 const config: WidgetConfig = {
   url: "",
@@ -28,18 +29,30 @@ const config: WidgetConfig = {
   greetingMessage: null,
   disableErrorAlert: false,
   closeOnOutsideClick: true,
+  openOnLoad: false,
   ...(window as any).buildShipChatWidget?.config,
 };
 
-function init() {
+async function init() {
   const styleElement = document.createElement("style");
   styleElement.innerHTML = css;
 
   document.head.insertBefore(styleElement, document.head.firstChild);
 
+  // Slight delay to allow DOMContent to be fully loaded
+  // (particularly for the button to be available in the `if (config.openOnLoad)` block below).
+  await new Promise((resolve) => setTimeout(resolve, 500));
+
   document
     .querySelector("[data-buildship-chat-widget-button]")
     ?.addEventListener("click", open);
+
+  if (config.openOnLoad) {
+    const target = document.querySelector(
+      "[data-buildship-chat-widget-button]"
+    );
+    open({ target } as Event);
+  }
 }
 window.addEventListener("load", init);
 
@@ -90,7 +103,7 @@ function open(e: Event) {
 
   const target = (e?.target as HTMLElement) || document.body;
   computePosition(target, containerElement, {
-    placement: "bottom",
+    placement: "top-start",
     middleware: [flip(), shift({ crossAxis: true, padding: 8 })],
     strategy: "fixed",
   }).then(({ x, y }) => {

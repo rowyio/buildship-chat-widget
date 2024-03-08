@@ -239,13 +239,13 @@
   animation: bounce 1500ms infinite;
 }
 #buildship-chat-widget__thinking_bubble .circle:nth-child(1) {
-  animation-delay: 0ms;
+  animation-delay: 1000ms;
 }
 #buildship-chat-widget__thinking_bubble .circle:nth-child(2) {
-  animation-delay: 100ms;
+  animation-delay: 1100ms;
 }
 #buildship-chat-widget__thinking_bubble .circle:nth-child(3) {
-  animation-delay: 200ms;
+  animation-delay: 1200ms;
 }
 @keyframes bounce {
   0% {
