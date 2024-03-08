@@ -118,6 +118,12 @@ Closes the widget when the user clicks outside of the widget body. If set to `fa
 
 Defaults to `true`.
 
+### `window.buildShipChatWidget.config.openOnLoad` (optional)
+
+Automatically opens the widget when the page finishes loading (requires a button with the `data-buildship-chat-widget-button` attribute to be present on the page).
+
+Defaults to `false`.
+
 ## How it works
 
 When the script is loaded, it looks for any elements with the `data-buildship-chat-widget-button` attribute and opens the widget when any of those elements are clicked.
