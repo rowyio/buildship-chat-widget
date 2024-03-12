@@ -128,9 +128,13 @@ Defaults to `false`.
 
 When the script is loaded, it looks for any elements with the `data-buildship-chat-widget-button` attribute and opens the widget when any of those elements are clicked.
 
-In addition to the `config` object, the `window.buildShipChatWidget` object also exposes the `open()` & `close()` methods, which can be called directly.
+In addition to the `config` object, the `window.buildShipChatWidget` object also exposes the `open()`, `close()` and `init()` methods, which can be called directly.
 
 The `open()` method accepts the click `event`, and uses `event.target` to compute the widget's position using [Floating UI](https://floating-ui.com/).
+
+The `close()` method closes the widget.
+
+The `init()` method initializes the widget, and is called automatically when the window finishes loading. It can be called manually to re-initialize the widget if needed (particularly useful in case of SPAs, where the widget might need to be re-initialized after a route change).
 
 ## Customizing the widget's appearance
 
