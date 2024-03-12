@@ -233,7 +233,7 @@ async function submit(e: Event) {
   return false;
 }
 
-const buildShipChatWidget = { open, close, config };
+const buildShipChatWidget = { open, close, config, init };
 (window as any).buildShipChatWidget = buildShipChatWidget;
 declare global {
   interface Window {
