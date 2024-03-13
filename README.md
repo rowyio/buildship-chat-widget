@@ -93,7 +93,7 @@ The widget can be customized by editing the properties present in the `window.bu
 | window.buildShipChatWidget.config.closeOnOutsideClick | Optional | Closes the widget when the user clicks outside of the widget body. If set to `false`, you will need to use the `close()` method (provided in the `window.buildShipChatWidget` object) to be able to close the widget programmatically (for example, by attaching it to a button). Defaults to `true` | 
 | window.buildShipChatWidget.config.openOnLoad | Optional | Automatically opens the widget when the page finishes loading (requires a button with the `data-buildship-chat-widget-button` attribute to be present on the page). Defaults to `false` | 
 
-#### Customizing the widget's appearance
+#### Customizing the widget's appearance (optional)
 
 The widget’s styling can be customized by overriding the CSS variables and/or the rules. (See [here](https://github.com/rowyio/buildship-chat-widget/blob/main/src/widget.css) for a list of variables and selectors).
 
