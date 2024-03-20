@@ -219,7 +219,9 @@ const handleStreamedResponse = async (res: Response) => {
   }
 
   const reader = res.body.getReader();
-  let result = "";
+  let responseMessage = "";
+  let responseThreadId = "";
+  let responseMessageComplete = false;
   let ts = Date.now();
 
   while (true) {
@@ -228,10 +230,28 @@ const handleStreamedResponse = async (res: Response) => {
       break;
     }
     const decoded = new TextDecoder().decode(value);
-    result += decoded;
 
-    await streamResponseToMessageEntry(result, ts, "system");
+    if (decoded.includes("\x1f")) {
+      // If the chunk contains the separator character, that marks the end of the message
+      // and the beginning of the threadId
+      const [message, threadId] = decoded.split("\x1f");
+      responseMessage += message;
+      responseThreadId += threadId;
+
+      responseMessageComplete = true;
+    } else {
+      if (responseMessageComplete) {
+        // If the message is complete, the chunk will be part of the threadId
+        responseThreadId += decoded;
+      } else {
+        // If the message is not complete yet, the chunk will be part of the message
+        responseMessage += decoded;
+      }
+    }
+    await streamResponseToMessageEntry(responseMessage, ts, "system");
   }
+
+  config.threadId = config.threadId ?? responseThreadId;
 };
 
 async function submit(e: Event) {
