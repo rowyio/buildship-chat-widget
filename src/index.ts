@@ -251,7 +251,8 @@ const handleStreamedResponse = async (res: Response) => {
     await streamResponseToMessageEntry(responseMessage, ts, "system");
   }
 
-  config.threadId = config.threadId ?? responseThreadId;
+  config.threadId =
+    config.threadId ?? (responseThreadId !== "" ? responseThreadId : undefined);
 };
 
 async function submit(e: Event) {
