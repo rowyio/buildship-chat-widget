@@ -14,6 +14,7 @@ const WIDGET_THINKING_BUBBLE_ID = "buildship-chat-widget__thinking_bubble";
 export type WidgetConfig = {
   url: string;
   threadId: string | undefined;
+  responseIsAStream: boolean;
   user: Record<any, any>;
   widgetTitle: string;
   greetingMessage: string | null;
@@ -24,6 +25,7 @@ export type WidgetConfig = {
 const config: WidgetConfig = {
   url: "",
   threadId: undefined,
+  responseIsAStream: false,
   user: {},
   widgetTitle: "Chatbot",
   greetingMessage: null,
@@ -142,6 +144,7 @@ async function createNewMessageEntry(
   const messageElement = document.createElement("div");
   messageElement.classList.add("buildship-chat-widget__message");
   messageElement.classList.add(`buildship-chat-widget__message--${from}`);
+  messageElement.id = `buildship-chat-widget__message--${from}--${timestamp}`;
 
   const messageText = document.createElement("p");
   messageText.innerHTML = await marked(message);
@@ -157,6 +160,100 @@ async function createNewMessageEntry(
 
   messagesHistory.prepend(messageElement);
 }
+
+const handleStandardResponse = async (res: Response) => {
+  if (res.ok) {
+    const {
+      message: responseMessage,
+      threadId: responseThreadId,
+    }: {
+      message: string | undefined;
+      threadId: string | undefined;
+    } = await res.json();
+
+    if (!responseMessage && responseMessage !== "") {
+      console.error("BuildShip Chat Widget: Server error", res);
+      if (!config.disableErrorAlert)
+        alert(
+          `Received an OK response but no message was found. Please make sure the API response is configured correctly. You can learn more here:\n\nhttps://github.com/rowyio/buildship-chat-widget?tab=readme-ov-file#connecting-the-widget-to-your-buildship-workflow`
+        );
+      return;
+    }
+
+    await createNewMessageEntry(responseMessage, Date.now(), "system");
+    config.threadId = config.threadId ?? responseThreadId;
+  } else {
+    console.error("BuildShip Chat Widget: Server error", res);
+    if (!config.disableErrorAlert)
+      alert(`Could not send message: ${res.statusText}`);
+  }
+};
+
+async function streamResponseToMessageEntry(
+  message: string,
+  timestamp: number,
+  from: "system" | "user"
+) {
+  const existingMessageElement = messagesHistory.querySelector(
+    `#buildship-chat-widget__message--${from}--${timestamp}`
+  );
+  if (existingMessageElement) {
+    // If the message element already exists, update the text
+    const messageText = existingMessageElement.querySelector("p")!;
+    messageText.innerHTML = await marked(message);
+    return;
+  } else {
+    // If the message element doesn't exist yet, create a new one
+    await createNewMessageEntry(message, timestamp, from);
+  }
+}
+
+const handleStreamedResponse = async (res: Response) => {
+  if (!res.body) {
+    console.error("BuildShip Chat Widget: Streamed response has no body", res);
+    if (!config.disableErrorAlert)
+      alert(
+        `Received a streamed response but no body was found. Please make sure the API response is configured correctly.`
+      );
+    return;
+  }
+
+  const reader = res.body.getReader();
+  let responseMessage = "";
+  let responseThreadId = "";
+  let responseMessageComplete = false;
+  let ts = Date.now();
+
+  while (true) {
+    const { value, done } = await reader.read();
+    if (done || value === undefined) {
+      break;
+    }
+    const decoded = new TextDecoder().decode(value);
+
+    if (decoded.includes("\x1f")) {
+      // If the chunk contains the separator character, that marks the end of the message
+      // and the beginning of the threadId
+      const [message, threadId] = decoded.split("\x1f");
+      responseMessage += message;
+      responseThreadId += threadId;
+
+      responseMessageComplete = true;
+    } else {
+      if (responseMessageComplete) {
+        // If the message is complete, the chunk will be part of the threadId
+        responseThreadId += decoded;
+      } else {
+        // If the message is not complete yet, the chunk will be part of the message
+        responseMessage += decoded;
+      }
+    }
+    await streamResponseToMessageEntry(responseMessage, ts, "system");
+  }
+
+  config.threadId =
+    config.threadId ?? (responseThreadId !== "" ? responseThreadId : undefined);
+};
 
 async function submit(e: Event) {
   e.preventDefault();
@@ -187,49 +284,29 @@ async function submit(e: Event) {
   await createNewMessageEntry(data.message, data.timestamp, "user");
   messagesHistory.prepend(thinkingBubble);
 
-  fetch(config.url, {
-    method: "POST",
-    headers: requestHeaders,
-    body: JSON.stringify(data),
-  })
-    .then(async (res) => {
-      if (res.ok) {
-        const {
-          message: responseMessage,
-          threadId: responseThreadId,
-        }: {
-          message: string | undefined;
-          threadId: string | undefined;
-        } = await res.json();
-
-        if (!responseMessage && responseMessage !== "") {
-          console.error("BuildShip Chat Widget: Server error", res);
-          if (!config.disableErrorAlert)
-            alert(
-              `Received an OK response but no message was found. Please make sure the API response is configured correctly. You can learn more here:\n\nhttps://github.com/rowyio/buildship-chat-widget?tab=readme-ov-file#connecting-the-widget-to-your-buildship-workflow`
-            );
-          return;
-        }
-
-        await createNewMessageEntry(responseMessage, Date.now(), "system");
-        config.threadId = config.threadId ?? responseThreadId;
-      } else {
-        console.error("BuildShip Chat Widget: Server error", res);
-        if (!config.disableErrorAlert)
-          alert(`Could not send message: ${res.statusText}`);
-      }
-    })
-    .catch((e) => {
-      console.error("BuildShip Chat Widget:", e);
-      if (!config.disableErrorAlert)
-        alert(`Could not send message: ${e.message}`);
-    })
-    .finally(() => {
-      submitElement.removeAttribute("disabled");
-      thinkingBubble.remove();
+  try {
+    let response = await fetch(config.url, {
+      method: "POST",
+      headers: requestHeaders,
+      body: JSON.stringify(data),
     });
+    thinkingBubble.remove();
+
+    if (config.responseIsAStream) {
+      await handleStreamedResponse(response);
+    } else {
+      await handleStandardResponse(response);
+    }
+  } catch (e: any) {
+    thinkingBubble.remove();
+    console.error("BuildShip Chat Widget:", e);
+    if (!config.disableErrorAlert) {
+      alert(`Could not send message: ${e.message}`);
+    }
+  }
 
   target.reset();
+  submitElement.removeAttribute("disabled");
   return false;
 }
 
