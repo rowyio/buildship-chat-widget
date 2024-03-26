@@ -1,6 +1,6 @@
 {
   "name": "@buildshipapp/chat-widget",
-  "version": "1.2.1",
+  "version": "1.3.0",
   "description": "A chat widget that can be paired with BuildShip workflows built using the Assistant API.",
   "repository": {
     "type": "git",
